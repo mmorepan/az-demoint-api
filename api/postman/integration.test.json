@@ -1,0 +1,336 @@
+{
+	"info": {
+		"_postman_id": "d812d9ba-8ee0-4f18-88d1-c44449646d4f",
+		"name": "DemoPetstore-v1.0",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "Oauth 2.0",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "5f2ca007-95a6-4bbd-8b8b-6209c569edc6",
+						"exec": [
+							"var jsonResponse = pm.response.json()\r",
+							"\r",
+							"pm.collectionVariables.set(\"access_token\", jsonResponse.access_token)\r",
+							"// pm.collectionVariables.set(\"refresh_token\", jsonResponse.refresh_token)\r",
+							"// pm.collectionVariables.set(\"expires_on\", jsonResponse.expires_on)\r",
+							"\r",
+							"pm.test(\"Status code is 200\", function () {\r",
+							"    pm.response.to.have.status(200);\r",
+							"});\r",
+							""
+						],
+						"type": "text/javascript"
+					}
+				},
+				{
+					"listen": "prerequest",
+					"script": {
+						"id": "4f1253f3-b505-4458-bfb4-569beca1a5f6",
+						"exec": [
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/x-www-url-form-urlencoded"
+					}
+				],
+				"body": {
+					"mode": "urlencoded",
+					"urlencoded": [
+						{
+							"key": "client_id",
+							"value": "{{nm_oauth_clientid}}",
+							"type": "text"
+						},
+						{
+							"key": "resource",
+							"value": "{{nm_oauth_resource}}",
+							"type": "text"
+						},
+						{
+							"key": "redirect_uri",
+							"value": "{{nm_oauth_redirecturi}}",
+							"type": "text"
+						},
+						{
+							"key": "grant_type",
+							"value": "{{nm_oauth_granttype}}",
+							"type": "text"
+						},
+						{
+							"key": "client_secret",
+							"value": "{{nm_oauth_clientsecret}}",
+							"type": "text"
+						},
+						{
+							"key": "refresh_token",
+							"value": "{{nm_oauth_refreshtoken}}",
+							"type": "text"
+						}
+					],
+					"options": {
+						"urlencoded": {}
+					}
+				},
+				"url": {
+					"raw": "{{nm_oauth_tokenurl}}",
+					"host": [
+						"{{nm_oauth_tokenurl}}"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "demo-pet",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "8109582c-72b6-44b8-99fc-2ecf4cbd2eb3",
+						"exec": [
+							"pm.test(\"Status code is 200\", function () {\r",
+							"    pm.response.to.have.status(200);\r",
+							"});\r",
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Ocp-Apim-Subscription-Key",
+						"value": "{{nm_api_subs_key}}",
+						"type": "text"
+					},
+					{
+						"key": "Authorization",
+						"value": "Bearer {{access_token}}",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n  \"id\": 0,\r\n  \"category\": {\r\n    \"id\": 0,\r\n    \"name\": \"string\"\r\n  },\r\n  \"name\": \"doggie\",\r\n  \"photoUrls\": [\r\n    \"string\"\r\n  ],\r\n  \"tags\": [\r\n    {\r\n      \"id\": 0,\r\n      \"name\": \"string\"\r\n    }\r\n  ],\r\n  \"status\": \"available\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{nm_api_baseurl}}/demoaz/v1/pet",
+					"host": [
+						"{{nm_api_baseurl}}"
+					],
+					"path": [
+						"demoaz",
+						"v1",
+						"pet"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "demo-pet-status",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "e2aa7611-efd1-444b-a6ec-7bfba66e3f30",
+						"exec": [
+							"pm.test(\"Status code is 200\", function () {\r",
+							"    pm.response.to.have.status(200);\r",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Ocp-Apim-Subscription-Key",
+						"value": "{{nm_api_subs_key}}",
+						"type": "text"
+					},
+					{
+						"key": "Authorization",
+						"value": "Bearer {{access_token}}",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n  \"id\": 0,\r\n  \"category\": {\r\n    \"id\": 0,\r\n    \"name\": \"string\"\r\n  },\r\n  \"name\": \"doggie\",\r\n  \"photoUrls\": [\r\n    \"string\"\r\n  ],\r\n  \"tags\": [\r\n    {\r\n      \"id\": 0,\r\n      \"name\": \"string\"\r\n    }\r\n  ],\r\n  \"status\": \"available\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{nm_api_baseurl}}/demoaz/v1/pet/findByStatus?status=sold",
+					"host": [
+						"{{nm_api_baseurl}}"
+					],
+					"path": [
+						"demoaz",
+						"v1",
+						"pet",
+						"findByStatus"
+					],
+					"query": [
+						{
+							"key": "status",
+							"value": "sold"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "demo-store",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "33a80443-8d40-4b3c-9d04-735b7409d279",
+						"exec": [
+							"pm.test(\"Status code is 200\", function () {\r",
+							"    pm.response.to.have.status(200);\r",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Ocp-Apim-Subscription-Key",
+						"value": "{{nm_api_subs_key}}",
+						"type": "text"
+					},
+					{
+						"key": "Authorization",
+						"value": "Bearer {{access_token}}",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n  \"id\": 0,\r\n  \"petId\": 0,\r\n  \"quantity\": 0,\r\n  \"shipDate\": \"2020-08-03T20:13:56.492Z\",\r\n  \"status\": \"placed\",\r\n  \"complete\": true\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{nm_api_baseurl}}/demoaz/v1/store/order",
+					"host": [
+						"{{nm_api_baseurl}}"
+					],
+					"path": [
+						"demoaz",
+						"v1",
+						"store",
+						"order"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "demo-store-inventory",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "48a3f91e-94b4-477b-9c6d-5317ebe1e8dc",
+						"exec": [
+							"pm.test(\"Status code is 200\", function () {\r",
+							"    pm.response.to.have.status(200);\r",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Ocp-Apim-Subscription-Key",
+						"value": "{{nm_api_subs_key}}",
+						"type": "text"
+					},
+					{
+						"key": "Authorization",
+						"value": "Bearer {{access_token}}",
+						"type": "text"
+					}
+				],
+				"url": {
+					"raw": "{{nm_api_baseurl}}/demoaz/v1/store/inventory",
+					"host": [
+						"{{nm_api_baseurl}}"
+					],
+					"path": [
+						"demoaz",
+						"v1",
+						"store",
+						"inventory"
+					]
+				}
+			},
+			"response": []
+		}
+	],
+	"variable": [
+		{
+			"id": "ceabbc48-03c7-44d5-904d-2b3a239810ec",
+			"key": "access_token",
+			"value": "eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiIsIng1dCI6ImppYk5ia0ZTU2JteFBZck45Q0ZxUms0SzRndyIsImtpZCI6ImppYk5ia0ZTU2JteFBZck45Q0ZxUms0SzRndyJ9.eyJhdWQiOiI2N2U1ZWMwMS02YTEzLTQxNjYtOTY0YS04N2NlNWJmMTAwNzciLCJpc3MiOiJodHRwczovL3N0cy53aW5kb3dzLm5ldC85Mjk2MTZmZi04MThjLTQ1NDEtYjA3MS0yYmQ2YWI5MTJlODgvIiwiaWF0IjoxNjAwMzY5Mjc0LCJuYmYiOjE2MDAzNjkyNzQsImV4cCI6MTYwMDM3MzE3NCwiYWNyIjoiMSIsImFpbyI6IkFXUUFtLzhRQUFBQS9rNWdzclpMTy96d0pRWVg3S0NWbGU4U1dsVUVic0tvUmxVVWFycE9udXlPb29Rc0pxVFU2bFFDYkJ2ZlRiV0dLa1Z0T08yTm1tdEl2c2hKMnFzVUhUMDg4MXlOejZOZFJMckhhWVFNcmFyWHpYQ0V5TndSbU53L3BPbGlwV1VSIiwiYW1yIjpbInB3ZCJdLCJhcHBpZCI6ImM3NDc2MDA0LTIwMDAtNGFmMC1hZGI5LWYyYTIxM2ViMTcxYSIsImFwcGlkYWNyIjoiMSIsImVtYWlsIjoibWFydGluLmpob24ubW9yZS5wYW50YUBldmVyaXMuY29tIiwiaWRwIjoiaHR0cHM6Ly9zdHMud2luZG93cy5uZXQvMzA0OGRjODctNDNmMC00MTAwLTlhY2ItYWUxOTcxYzc5Mzk1LyIsImlwYWRkciI6IjE4MS42NS43NC4yMjAiLCJuYW1lIjoiTWFydGluIEpob24gTW9yZSBQYW50YSIsIm9pZCI6IjljYjQzNDQyLTA0ZjktNGU0Mi05ZTAyLTY4NDkwOWViMTZlYyIsInJoIjoiMC5BQUFBX3hhV2tveUJRVVd3Y1N2V3E1RXVpQVJnUjhjQUlQQktyYm55b2hQckZ4b0tBTXcuIiwic2NwIjoiTGVlci5XYXBwZSIsInN1YiI6IklNelpXbjJJOFY4ckx3Yk1jWTNuZl9wVW5WeEZObGZBTGk5Wm5PWEE0NFkiLCJ0aWQiOiI5Mjk2MTZmZi04MThjLTQ1NDEtYjA3MS0yYmQ2YWI5MTJlODgiLCJ1bmlxdWVfbmFtZSI6Im1hcnRpbi5qaG9uLm1vcmUucGFudGFAZXZlcmlzLmNvbSIsInV0aSI6IkFLWGlzNGdsTzBlTTYzcWVCNEk3QUEiLCJ2ZXIiOiIxLjAifQ.mG1VncCWxL4bVZPqcywqZT7PhUD2CflvwVZBR0SPSwrktvyxJNxCg1lqYtZZMBdfINumR6SdqIiQXO1dS5ZOUzqRpBW4hNwJyE-d2k96l24SieTcblXajKF-rl9ROGFttcwJwdriIq-7AtM__0mh_tQ3BZi_qhA17rXSRnuYZXa_8MahCn5-VcLU_KIa7vL4cnphvV0Aw3heTU9s64cgn2oQCbsRixO22fzOK3t56NFlTxGRcfofnUXbnfHH7orHsdTeOF03vxm46YSbJ7p_irWWtbIaDEB440L5hIO3fF4HR-gLrcCWf7ivOI09R43mHw6nJ-dweGFu0HWBNsXzDQ"
+		},
+		{
+			"id": "3138a6f7-0f04-4016-88d1-98feabb26ea5",
+			"key": "expires_on",
+			"value": "1595707134"
+		},
+		{
+			"id": "39104117-dea1-4086-9136-c6c9a2a29a8e",
+			"key": "refresh_token",
+			"value": "AQABAAAAAAAGV_bv21oQQ4ROqh0_1-tAt5jTiNnSAHYi8Ox5w2gxs92daAGLZ1zGh6GRKs_SqKs00RRe8oGl9lswogTu2-z0JfYAMyOs5Oox02KxloP9N21FtnJnT9xcnB9A8IFesIuAD-iFOwVBhkSGO3CFiWtJ8_Xe02OQquheA92Kn3xPikRXFSyA8TyGt1sJ0kQsG5yOJMykgp6aZo4EAcMLaUWYeN-p-_vgxlj6JHeFcqtfZlfCqV7CaOhRVFk4Fc7YskV2ZY9B_V9cnbLx6hsj6ax_9UNx28ua2PIQe3Upet13GfnDuCTC0_FxVcg0weLLzqCCdAY9QaepWjVI5zfa9ocqmjRrkCsyE47VSnRswQteLb0n2AISbUcP-GwgBVD5TffPuuTLFJaksDmHWIc3LNj6nlVBOqCS7Ri_cuR0qglUjXgmpA6c4yqOyyqROtB5kx-iR7uczwSRlpQ4OwC-uAke8XUrwi9pBSy8r1vNjLWEGUpm2uWFxQtK83RiHkxpxDNtFJzGL_4GwB4vOxD_PheLfLWgEo1WdBXSzrHMkZEjL4okkj-GFXfm63MKptcVlV6ZLMCo26BKonLpurRz7fkbsq1ujlpVCQHSVL4jX60lzjd3Ikg2SzCGXkIReAu3n_lkZUaj-8YlPDNki2lNUTkTmoSxGZMoqUKloNxlL1Qjg2E4mwcOW0pnzepX87HzDUT6DeUXxtRHbRiu4Vdd1ppv-HrPQ9yoKduuVEPti_2-A3I_58xAt-nLRnIVRyx22YRV-F481sFBCqlUGhViYwuPVZ0KfaX4Vg65FeYBp1ES9FN0ZJ3MXHgAbJ-TADclbRKnrAgPk1KOYFDuimbl8cgiJLLivyK9vUKJyDrcSuichoaXTe13XHl-0FxcgMsnD0LYwyQGebLIM8ZP2whK2IIVB9Xn-vVxzto-bFM5dBKEr3cpO-frLConqyJptl-OK5QRjp0yPnJ13oW4lDPTmYmLREabLA6F1dMkyYDwBbYsibmcPNvwctQQ5cazUcD0Ls91_NVvpEVAOiM9UHUmnNWj5yBHle3DOR2Wfhc6zW-KVybmHYR9F9Y3PC5DV5pLwuW4wnXec9ucUTGefP9JCqEg2EY1efsPOKVYyiuJpcwFMFEXGiQ66yYlJET2xrtejSF3dCRgwnWMLKaRan7r1XgL73vQ69ZP5jBbUbvd4dykwiDNYtK-HgJg62C0TYfVUNC9Qx-8dm12r6aTNlJFJam1CIblgy7xHQmVIb4zQsJ8Urz8MeywVtuXKDsEfHyJEJggAA"
+		},
+		{
+			"id": "50da0b5a-03b9-4e07-8f6b-8d76f5d825c3",
+			"key": "pet_id",
+			"value": null
+		}
+	],
+	"protocolProfileBehavior": {}
+}

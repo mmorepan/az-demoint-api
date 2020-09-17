@@ -1,0 +1,352 @@
+{
+  "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
+  "contentVersion": "1.0.0.0",
+  "parameters": {
+    "ApimServiceName": {
+      "type": "string"
+    },
+    "PolicyXMLBaseUrl": {
+      "type": "string"
+    },
+    "BackendServiceUrl": {
+      "type": "string"
+    },
+    "OauthServerId": {
+      "type": "string"
+    },
+    "ProductsApiName": {
+      "type": "object"
+    }
+  },
+  "variables": {},
+  "resources": [
+    {
+      "name": "[concat(parameters('ApimServiceName'), '/demo332')]",
+      "type": "Microsoft.ApiManagement/service/apis",
+      "apiVersion": "2019-01-01",
+      "dependsOn": [],
+      "properties": {
+        "displayName": "demo332",
+        "apiRevision": "1",
+        "description": "This is a sample server Petstore server.  You can find out more about Swagger at [http://swagger.io](http://swagger.io) or on [irc.freenode.net, #swagger](http://swagger.io/irc/).  For this sample, you can use the api key `special-key` to test the authorization filters.",
+        "subscriptionRequired": true,
+        "serviceUrl": "[parameters('BackendServiceUrl')]",
+        "path": "demo332/v1",
+        "protocols": [
+          "https"
+        ],
+        "authenticationSettings": {
+          "oAuth2": {
+            "authorizationServerId": "[parameters('OauthServerId')]"
+          }
+        },
+        "subscriptionKeyParameterNames": {
+          "header": "Ocp-Apim-Subscription-Key",
+          "query": "subscription-key"
+        },
+        "isCurrent": true
+      },
+      "resources": []
+    },
+    {
+      "name": "[concat(parameters('ApimServiceName'), '/demo332/5f63b6b0a6ad2619f0b0d7fa')]",
+      "type": "Microsoft.ApiManagement/service/apis/schemas",
+      "apiVersion": "2019-01-01",
+      "dependsOn": [
+        "[resourceId('Microsoft.ApiManagement/service/apis', parameters('ApimServiceName'), 'demo332')]"
+      ],
+      "properties": {
+        "contentType": "application/vnd.ms-azure-apim.swagger.definitions+json",
+        "document": {
+          "value": "{\"ApiResponse\":{\"type\":\"object\",\"properties\":{\"code\":{\"type\":\"integer\",\"format\":\"int32\"},\"type\":{\"type\":\"string\"},\"message\":{\"type\":\"string\"}}},\"Category\":{\"type\":\"object\",\"properties\":{\"id\":{\"type\":\"integer\",\"format\":\"int64\"},\"name\":{\"type\":\"string\"}},\"xml\":{\"name\":\"Category\"}},\"Pet\":{\"type\":\"object\",\"required\":[\"name\",\"photoUrls\"],\"properties\":{\"id\":{\"type\":\"integer\",\"format\":\"int64\"},\"category\":{\"$ref\":\"#/definitions/Category\"},\"name\":{\"type\":\"string\",\"example\":\"doggie\"},\"photoUrls\":{\"type\":\"array\",\"xml\":{\"wrapped\":true},\"items\":{\"type\":\"string\",\"xml\":{\"name\":\"photoUrl\"}}},\"tags\":{\"type\":\"array\",\"xml\":{\"wrapped\":true},\"items\":{\"xml\":{\"name\":\"tag\"},\"$ref\":\"#/definitions/Tag\"}},\"status\":{\"type\":\"string\",\"description\":\"pet status in the store\",\"enum\":[\"available\",\"pending\",\"sold\"]}},\"xml\":{\"name\":\"Pet\"}},\"Tag\":{\"type\":\"object\",\"properties\":{\"id\":{\"type\":\"integer\",\"format\":\"int64\"},\"name\":{\"type\":\"string\"}},\"xml\":{\"name\":\"Tag\"}},\"Order\":{\"type\":\"object\",\"properties\":{\"id\":{\"type\":\"integer\",\"format\":\"int64\"},\"petId\":{\"type\":\"integer\",\"format\":\"int64\"},\"quantity\":{\"type\":\"integer\",\"format\":\"int32\"},\"shipDate\":{\"type\":\"string\",\"format\":\"date-time\"},\"status\":{\"type\":\"string\",\"description\":\"Order Status\",\"enum\":[\"placed\",\"approved\",\"delivered\"]},\"complete\":{\"type\":\"boolean\"}},\"xml\":{\"name\":\"Order\"}},\"User\":{\"type\":\"object\",\"properties\":{\"id\":{\"type\":\"integer\",\"format\":\"int64\"},\"username\":{\"type\":\"string\"},\"firstName\":{\"type\":\"string\"},\"lastName\":{\"type\":\"string\"},\"email\":{\"type\":\"string\"},\"password\":{\"type\":\"string\"},\"phone\":{\"type\":\"string\"},\"userStatus\":{\"type\":\"integer\",\"format\":\"int32\",\"description\":\"User Status\"}},\"xml\":{\"name\":\"User\"}},\"PetArray\":{\"type\":\"array\",\"items\":{\"$ref\":\"#/definitions/Pet\"}},\"StoreInventoryGet200ApplicationJsonResponse\":{\"type\":\"object\",\"additionalProperties\":{\"type\":\"integer\",\"format\":\"int32\"}}}"
+        }
+      }
+    },
+    {
+      "name": "[concat(parameters('ApimServiceName'), '/demo332/addPet')]",
+      "type": "Microsoft.ApiManagement/service/apis/operations",
+      "apiVersion": "2019-01-01",
+      "dependsOn": [
+        "[resourceId('Microsoft.ApiManagement/service/apis', parameters('ApimServiceName'), 'demo332')]",
+        "[resourceId('Microsoft.ApiManagement/service/apis/schemas', parameters('ApimServiceName'), 'demo332', '5f63b6b0a6ad2619f0b0d7fa')]"
+      ],
+      "properties": {
+        "displayName": "Add a new pet to the store",
+        "method": "POST",
+        "urlTemplate": "/pet",
+        "templateParameters": [],
+        "description": "",
+        "request": {
+          "description": "Pet object that needs to be added to the store",
+          "queryParameters": [],
+          "headers": [],
+          "representations": [
+            {
+              "contentType": "application/json",
+              "schemaId": "5f63b6b0a6ad2619f0b0d7fa",
+              "typeName": "Pet"
+            },
+            {
+              "contentType": "application/xml",
+              "schemaId": "5f63b6b0a6ad2619f0b0d7fa",
+              "typeName": "Pet"
+            }
+          ]
+        },
+        "responses": [
+          {
+            "statusCode": 405,
+            "description": "Invalid input",
+            "representations": [
+              {
+                "contentType": "application/json"
+              },
+              {
+                "contentType": "application/xml"
+              }
+            ],
+            "headers": []
+          }
+        ]
+      },
+      "resources": []
+    },
+    {
+      "name": "[concat(parameters('ApimServiceName'), '/demo332/addPet/policy')]",
+      "type": "Microsoft.ApiManagement/service/apis/operations/policies",
+      "apiVersion": "2019-01-01",
+      "dependsOn": [
+        "[resourceId('Microsoft.ApiManagement/service/apis/operations', parameters('ApimServiceName'), 'demo332', 'addPet')]"
+      ],
+      "properties": {
+        "format": "rawxml-link",
+        "value": "[concat(parameters('PolicyXMLBaseUrl'), '/demo332-addPet-operationPolicy.xml')]"
+      }
+    },
+    {
+      "name": "[concat(parameters('ApimServiceName'), '/demo332/addPet/pet')]",
+      "type": "Microsoft.ApiManagement/service/apis/operations/tags",
+      "apiVersion": "2019-01-01",
+      "dependsOn": [
+        "[resourceId('Microsoft.ApiManagement/service/apis/operations', parameters('ApimServiceName'), 'demo332', 'addPet')]"
+      ],
+      "properties": {
+        "displayName": "pet"
+      }
+    },
+    {
+      "name": "[concat(parameters('ApimServiceName'), '/demo332/findPetsByStatus')]",
+      "type": "Microsoft.ApiManagement/service/apis/operations",
+      "apiVersion": "2019-01-01",
+      "dependsOn": [
+        "[resourceId('Microsoft.ApiManagement/service/apis', parameters('ApimServiceName'), 'demo332')]",
+        "[resourceId('Microsoft.ApiManagement/service/apis/schemas', parameters('ApimServiceName'), 'demo332', '5f63b6b0a6ad2619f0b0d7fa')]"
+      ],
+      "properties": {
+        "displayName": "Finds Pets by status",
+        "method": "GET",
+        "urlTemplate": "/pet/findByStatus?status={status}",
+        "templateParameters": [
+          {
+            "name": "status",
+            "description": "Status values that need to be considered for filter",
+            "type": "array",
+            "required": true,
+            "values": []
+          }
+        ],
+        "description": "Multiple status values can be provided with comma separated strings",
+        "request": {
+          "queryParameters": [],
+          "headers": [],
+          "representations": []
+        },
+        "responses": [
+          {
+            "statusCode": 200,
+            "description": "successful operation",
+            "representations": [
+              {
+                "contentType": "application/json",
+                "schemaId": "5f63b6b0a6ad2619f0b0d7fa",
+                "typeName": "PetArray"
+              },
+              {
+                "contentType": "application/xml",
+                "schemaId": "5f63b6b0a6ad2619f0b0d7fa",
+                "typeName": "PetArray"
+              }
+            ],
+            "headers": []
+          },
+          {
+            "statusCode": 400,
+            "description": "Invalid status value",
+            "representations": [
+              {
+                "contentType": "application/json"
+              },
+              {
+                "contentType": "application/xml"
+              }
+            ],
+            "headers": []
+          }
+        ]
+      },
+      "resources": []
+    },
+    {
+      "name": "[concat(parameters('ApimServiceName'), '/demo332/findPetsByStatus/pet')]",
+      "type": "Microsoft.ApiManagement/service/apis/operations/tags",
+      "apiVersion": "2019-01-01",
+      "dependsOn": [
+        "[resourceId('Microsoft.ApiManagement/service/apis/operations', parameters('ApimServiceName'), 'demo332', 'findPetsByStatus')]"
+      ],
+      "properties": {
+        "displayName": "pet"
+      }
+    },
+    {
+      "name": "[concat(parameters('ApimServiceName'), '/demo332/placeOrder')]",
+      "type": "Microsoft.ApiManagement/service/apis/operations",
+      "apiVersion": "2019-01-01",
+      "dependsOn": [
+        "[resourceId('Microsoft.ApiManagement/service/apis', parameters('ApimServiceName'), 'demo332')]",
+        "[resourceId('Microsoft.ApiManagement/service/apis/schemas', parameters('ApimServiceName'), 'demo332', '5f63b6b0a6ad2619f0b0d7fa')]"
+      ],
+      "properties": {
+        "displayName": "Place an order for a pet",
+        "method": "POST",
+        "urlTemplate": "/store/order",
+        "templateParameters": [],
+        "description": "",
+        "request": {
+          "description": "order placed for purchasing the pet",
+          "queryParameters": [],
+          "headers": [],
+          "representations": [
+            {
+              "contentType": "application/json",
+              "schemaId": "5f63b6b0a6ad2619f0b0d7fa",
+              "typeName": "Order"
+            }
+          ]
+        },
+        "responses": [
+          {
+            "statusCode": 200,
+            "description": "successful operation",
+            "representations": [
+              {
+                "contentType": "application/json",
+                "schemaId": "5f63b6b0a6ad2619f0b0d7fa",
+                "typeName": "Order"
+              },
+              {
+                "contentType": "application/xml",
+                "schemaId": "5f63b6b0a6ad2619f0b0d7fa",
+                "typeName": "Order"
+              }
+            ],
+            "headers": []
+          },
+          {
+            "statusCode": 400,
+            "description": "Invalid Order",
+            "representations": [
+              {
+                "contentType": "application/json"
+              },
+              {
+                "contentType": "application/xml"
+              }
+            ],
+            "headers": []
+          }
+        ]
+      },
+      "resources": []
+    },
+    {
+      "name": "[concat(parameters('ApimServiceName'), '/demo332/placeOrder/store')]",
+      "type": "Microsoft.ApiManagement/service/apis/operations/tags",
+      "apiVersion": "2019-01-01",
+      "dependsOn": [
+        "[resourceId('Microsoft.ApiManagement/service/apis/operations', parameters('ApimServiceName'), 'demo332', 'placeOrder')]"
+      ],
+      "properties": {
+        "displayName": "store"
+      }
+    },
+    {
+      "name": "[concat(parameters('ApimServiceName'), '/demo332/getInventory')]",
+      "type": "Microsoft.ApiManagement/service/apis/operations",
+      "apiVersion": "2019-01-01",
+      "dependsOn": [
+        "[resourceId('Microsoft.ApiManagement/service/apis', parameters('ApimServiceName'), 'demo332')]",
+        "[resourceId('Microsoft.ApiManagement/service/apis/schemas', parameters('ApimServiceName'), 'demo332', '5f63b6b0a6ad2619f0b0d7fa')]"
+      ],
+      "properties": {
+        "displayName": "Returns pet inventories by status",
+        "method": "GET",
+        "urlTemplate": "/store/inventory",
+        "templateParameters": [],
+        "description": "Returns a map of status codes to quantities",
+        "request": {
+          "queryParameters": [],
+          "headers": [],
+          "representations": []
+        },
+        "responses": [
+          {
+            "statusCode": 200,
+            "description": "successful operation",
+            "representations": [
+              {
+                "contentType": "application/json",
+                "schemaId": "5f63b6b0a6ad2619f0b0d7fa",
+                "typeName": "StoreInventoryGet200ApplicationJsonResponse"
+              }
+            ],
+            "headers": []
+          }
+        ]
+      },
+      "resources": []
+    },
+    {
+      "name": "[concat(parameters('ApimServiceName'), '/demo332/getInventory/store')]",
+      "type": "Microsoft.ApiManagement/service/apis/operations/tags",
+      "apiVersion": "2019-01-01",
+      "dependsOn": [
+        "[resourceId('Microsoft.ApiManagement/service/apis/operations', parameters('ApimServiceName'), 'demo332', 'getInventory')]"
+      ],
+      "properties": {
+        "displayName": "store"
+      }
+    },
+    {
+      "name": "[concat(parameters('ApimServiceName'), '/demo332/policy')]",
+      "type": "Microsoft.ApiManagement/service/apis/policies",
+      "apiVersion": "2019-01-01",
+      "dependsOn": [
+        "[resourceId('Microsoft.ApiManagement/service/apis', parameters('ApimServiceName'), 'demo332')]"
+      ],
+      "properties": {
+        "format": "rawxml-link",
+        "value": "[concat(parameters('PolicyXMLBaseUrl'), '/demo332-apiPolicy.xml')]"
+      }
+    },
+    {
+      "name": "[concat(parameters('ApimServiceName'), '/', parameters('ProductsApiName').wappedev, '/', 'demo332')]",
+      "type": "Microsoft.ApiManagement/service/products/apis",
+      "apiVersion": "2019-01-01",
+      "dependsOn": [
+        "[resourceId('Microsoft.ApiManagement/service/apis', parameters('ApimServiceName'), 'demo332')]"
+      ],
+      "properties": {}
+    }
+  ],
+  "outputs": {}
+}
